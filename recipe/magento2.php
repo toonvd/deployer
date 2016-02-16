@@ -29,18 +29,11 @@ task('deploy:setup:upgrade', function () {
 })->desc('Start DB upgrade');
 
 /**
- * Start di compilation
+ * Set production mode (generate static content & compile)
  */
-task('deploy:setup:di:compile', function() {
-    run("cd {{release_path}} && php bin/magento setup:di:compile");
-})->desc('Start di compilation');
-
-/**
- * Deploy static content
- */
-task('deploy:setup:static-content:deploy', function () {
-    run("cd {{release_path}} && php bin/magento setup:static-content:deploy");
-})->desc('Deploy static content');
+task('deploy:mode:set_production', function() {
+    run("cd {{release_path}} && php bin/magento deploy:mode:set production");
+})->desc('Set production mode');
 
 /**
  * Flush cache
@@ -50,7 +43,7 @@ task('deploy:cache:flush', function () {
 })->desc('Flush cache');
 
 /**
- * Remove files that can be used to compromise Magento
+ * Remove files that can be used to compromise Magento 2
  */
 task('deploy:clear_version', function () {
     run("rm -f {{release_path}}/LICENSE.txt");
@@ -79,8 +72,7 @@ task('deploy', [
     'deploy:shared',
     'deploy:writable',
     'deploy:setup:upgrade',
-    'deploy:setup:di:compile',
-    'deploy:setup:static-content:deploy',
+    'deploy:mode:set_production',
     'deploy:cache:flush',
     'deploy:symlink',
     'cleanup',
